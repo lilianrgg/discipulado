@@ -1,11 +1,21 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
+	import '../app.css';
 
 	let { children } = $props();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<title>Discipulado — Biblia RVR1960</title>
+	<meta name="description" content="Lee la Biblia Reina-Valera 1960 sin necesidad de crear una cuenta." />
 </svelte:head>
 
-{@render children()}
+<div class="page-shell">
+	<header class="top-bar">
+		<a href="/" class="top-bar__logo">✦ Discipulado</a>
+		<span class="guest-badge">Invitado</span>
+	</header>
+
+	<main class="page-content">
+		{@render children()}
+	</main>
+</div>

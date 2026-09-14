@@ -11,29 +11,46 @@ describe('TypeScript Bible API Client', () => {
 		const books = await getBooks(mockFetch as any);
 		expect(books).toHaveLength(1);
 		expect(books[0].slug).toBe('genesis');
-		expect(mockFetch).toHaveBeenCalledWith('https://bible-api.deno.dev/api/books');
+		expect(mockFetch).toHaveBeenCalledWith('https://api.midvash.com/v1/books?language=es&version=rvr1960');
 	});
 
-	it('should construct correct URL for reading a chapter', async () => {
-		const mockFetch = vi.fn().mockResolvedValue({
+	it('should parse midvash real API JSON response structure correctly', async () => {
+		const mockFetchBooks = vi.fn().mockResolvedValue({
 			ok: true,
-			json: async () => [{ number: 1, text: 'En el principio...' }]
+			json: async () => ({
+				data: [
+					{
+						id: 1,
+						name: { es: 'Génesis', en: 'Genesis' },
+						slug: { es: 'genesis', en: 'genesis' },
+						chapters: 50
+					}
+				],
+				meta: { total: 1 }
+			})
 		});
+		const books = await getBooks(mockFetchBooks as any);
+		expect(books).toHaveLength(1);
+		expect(books[0].names[0]).toBe('Génesis');
+		expect(books[0].slug).toBe('genesis');
 
-		const verses = await readChapter('juan', 3, 'rv1960', mockFetch as any);
-		expect(verses).toHaveLength(1);
-		expect(mockFetch).toHaveBeenCalledWith('https://bible-api.deno.dev/api/read/rv1960/juan/3');
-	});
-
-	it('should construct correct URL for reading a single verse', async () => {
-		const mockFetch = vi.fn().mockResolvedValue({
+		const mockFetchChapter = vi.fn().mockResolvedValue({
 			ok: true,
-			json: async () => ({ number: 16, text: 'Porque de tal manera amó Dios al mundo...' })
+			json: async () => ({
+				data: {
+					version: 'rvr1960',
+					book: 'john',
+					chapter: 3,
+					verses: ['Versículo 1 text', 'Versículo 2 text']
+				},
+				meta: { total: 2 }
+			})
 		});
-
-		const verse = await readVerse('juan', 3, 16, 'rv1960', mockFetch as any);
-		expect(verse.number).toBe(16);
-		expect(mockFetch).toHaveBeenCalledWith('https://bible-api.deno.dev/api/read/rv1960/juan/3/16');
+		const verses = await readChapter('juan', 3, 'rvr1960', mockFetchChapter as any);
+		expect(verses).toHaveLength(2);
+		expect(verses[0].number).toBe(1);
+		expect(verses[0].text).toBe('Versículo 1 text');
+		expect(verses[1].number).toBe(2);
 	});
 
 	it('should throw BibleApiError on invalid input or HTTP error', async () => {

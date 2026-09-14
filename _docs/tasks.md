@@ -14,7 +14,7 @@ Description: Configure Supabase credentials and client initialization for Postgr
 
 ## 3. Bible API Client Module (`bible-api.deno.dev`)
 Goal: Build a dedicated HTTP client module for fetching Bible books, chapters, and verses from `bible-api.deno.dev`.
-Description: Implement API client methods in FastAPI and TypeScript for querying `https://bible-api.deno.dev/api/books` and `https://bible-api.deno.dev/api/read/rv1960/{book}/{chapter}/{verse}`. Include input validation for book slugs, chapter numbers, and fallback error handling for network failures.
+Description: Implement API client methods in FastAPI and TypeScript for querying `https://api.midvash.com/v1/books?language=es&version=rvr1960` and `https://api.midvash.com/v1/{version}/{book}/{chapter}/{verse}`. Include input validation for book slugs, chapter numbers, and fallback error handling for network failures.
 
 ## 4. Mobile-First Bible Reader Shell with Guest Mode
 Goal: Build the primary SvelteKit UI layout for browsing books, chapters, and verses with guest user support.

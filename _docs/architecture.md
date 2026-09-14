@@ -42,7 +42,7 @@ discipulado/
 │   ├── src/
 │   │   ├── lib/
 │   │   │   ├── api/          # Public Bible API client & FastAPI backend client
-│   │   │   │   ├── bible.ts  # Client for https://bible-api.deno.dev/api/
+│   │   │   │   ├── bible.ts  # Client for https://api.midvash.com/v1/
 │   │   │   │   └── backend.ts# Client for FastAPI microservices
 │   │   │   ├── db/           # IndexedDB implementation for Scripture storage
 │   │   │   ├── components/   # UI components (Reader, PrayerCard, GroupFeed, Chat)
@@ -80,7 +80,7 @@ flowchart TB
   end
 
   subgraph ExternalAPI [External Bible Provider]
-    API["https://bible-api.deno.dev/api/"]
+    API["https://api.midvash.com/v1/"]
   end
 
   UI -->|"1. Request Chapter (rv1960/juan/3)"| CacheDB
@@ -92,8 +92,8 @@ flowchart TB
   SW -->|"6. Render text"| UI
 ```
 
-* **Books list endpoint:** `https://bible-api.deno.dev/api/books`
-* **Reading endpoint example:** `https://bible-api.deno.dev/api/read/rv1960/juan/3/16`
+* **Books list endpoint:** `https://api.midvash.com/v1/books?language=es&version=rvr1960`
+* **Reading endpoint example:** `https://api.midvash.com/v1/rvr1960/john/3/16`
 
 ### 2. Application State & Business Logic Flow
 
@@ -135,7 +135,7 @@ flowchart TB
 
 ## Key Technical Decisions
 
-1. **Decoupled Scripture Provider:** Supabase Postgres remains lean by excluding the full Bible text (~31,000 verses). Scripture reading relies entirely on `https://bible-api.deno.dev/api/` and IndexedDB client caching.
+1. **Decoupled Scripture Provider:** Supabase Postgres remains lean by excluding the full Bible text (~31,000 verses). Scripture reading relies entirely on `https://api.midvash.com/es#endpoints` and IndexedDB client caching.
 2. **Translation Consistency (`rv1960`):** The external reader API, the offline cache, the local keyword search, and the AI RAG ingestion pipeline all strictly share the exact same translation: **Reina-Valera 1960 (`rv1960`)**.
 3. **Offline-First PWA Cache:** IndexedDB stores fetched Bible chapters persistently. Subsequent readings work fully offline without hitting either the external API or Supabase.
 4. **Security & Authorization Boundaries:** Client-side CRUD operations (prayers, community posts, group messages) are enforced by Supabase Row Level Security (RLS) policies. FastAPI uses Supabase service roles for vector retrieval and admin tasks.

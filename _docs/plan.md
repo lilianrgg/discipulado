@@ -101,7 +101,7 @@ Note: In **Option A**, Supabase holds app data (users, prayer, community, readin
 | App backend (data + auth) | **Supabase** (Postgres, Auth, Storage) | Managed application backend — users, prayer, community, groups, plan progress, moderation |
 | App backend (logic) | **FastAPI** | Python services: RAG, moderation jobs, reading-plan logic, Web Push, Bible ingest for embeddings |
 | Auth | **Supabase Auth** (email/password) | Email/password only; guest mode = no session, Bible routes public |
-| Bible reading (online) | **Public Bible API** (`bible-api.deno.dev`) | Fetch books/chapters/verses on demand (`https://bible-api.deno.dev/api/read/rv1960/juan/3/16`); Supabase is not used for verse text |
+| Bible reading (online) | **Public Bible API** (`https://api.midvash.com/v1/`) | Fetch books/chapters/verses on demand (`https://api.midvash.com/v1/rvr1960/john/3/16`); Supabase is not used for verse text |
 | Bible reading (offline) | **IndexedDB + service worker cache** | Cache chapters fetched from public API; satisfies MVP offline requirement without Supabase as Bible store |
 | Bible keyword search | **Client-side search index** (built from cached/API-fetched text) or **FastAPI proxy + local index** | Public APIs rarely offer full-text search; build a one-time index from the same translation, search locally or via thin FastAPI endpoint — **not** Postgres FTS on Supabase for MVP |
 | Vector/RAG | **pgvector** in Supabase + **FastAPI RAG service** | Store **embeddings + chunk metadata** for Scripture and approved theological sources; one-time ingest from same translation as public API |
@@ -168,11 +168,11 @@ flowchart LR
 - Must **validate API license** for app use, caching, and offline redistribution (even PD text can have API ToS constraints).
 - Supabase free tier limits (~500 MB DB) — fine for MVP since full Bible text is not stored there; embeddings + app data only.
 
-### Selected Bible API — `bible-api.deno.dev`
+### Selected Bible API — `https://api.midvash.com/`
 
-* **Books list:** `https://bible-api.deno.dev/api/books`
-* **Read chapter/verse (RV1960):** `https://bible-api.deno.dev/api/read/rv1960/juan/3/16`
-* **Documentation & Examples:** `https://docs-bible-api.netlify.app/api/examples`
+* **Books list:** `https://api.midvash.com/v1/books?language=es&version=rvr1960`
+* **Read chapter/verse (RV1960):** `https://api.midvash.com/v1/rvr1960/john/3/16`
+* **Documentation & Examples:** `https://api.midvash.com/es#endpoints`
 
 Provides Spanish Reina-Valera 1960 (RV1960) text directly over JSON. PWA client caches fetched chapters into IndexedDB for offline reading, and FastAPI runs an ingestion job against this API to seed vector embeddings for RAG.
 
