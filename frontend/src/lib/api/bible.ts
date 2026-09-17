@@ -70,8 +70,15 @@ function normalizeTranslation(translation: string): string {
 	return TRANSLATION_ALIASES[translation.toLowerCase()] ?? translation.toLowerCase();
 }
 
+import {
+	getCachedBooks,
+	setCachedBooks,
+	getCachedChapter,
+	setCachedChapter
+} from '$lib/db/offline-bible';
+
 /**
- * Fetches all available books of the Bible.
+ * Fetches all available books of the Bible. Integrates IndexedDB offline fallback.
  */
 export async function getBooks(fetchFn: typeof fetch = fetch): Promise<BibleBook[]> {
 	try {
@@ -82,7 +89,7 @@ export async function getBooks(fetchFn: typeof fetch = fetch): Promise<BibleBook
 		const raw = await res.json();
 		const list: any[] = Array.isArray(raw) ? raw : (raw.data || []);
 
-		return list.map((b) => {
+		const books: BibleBook[] = list.map((b) => {
 			const esName = typeof b.name === 'object' ? (b.name.es || b.name.en || '') : String(b.name || '');
 			const enName = typeof b.name === 'object' ? (b.name.en || esName) : esName;
 			const esSlug = typeof b.slug === 'object' ? (b.slug.es || b.slug.en || '') : String(b.slug || '');
@@ -93,14 +100,22 @@ export async function getBooks(fetchFn: typeof fetch = fetch): Promise<BibleBook
 				chapters: b.chapters
 			};
 		});
+
+		// Save to offline cache asynchronously
+		setCachedBooks(books).catch(() => {});
+		return books;
 	} catch (error) {
+		const cached = await getCachedBooks();
+		if (cached && cached.length > 0) {
+			return cached;
+		}
 		if (error instanceof BibleApiError) throw error;
 		throw new BibleApiError(`Network error fetching Bible books: ${(error as Error).message}`);
 	}
 }
 
 /**
- * Reads a chapter from a specific book and translation.
+ * Reads a chapter from a specific book and translation. Integrates IndexedDB offline fallback.
  * Example URL: https://api.midvash.com/v1/rvr1960/john/3
  */
 export async function readChapter(
@@ -130,8 +145,9 @@ export async function readChapter(
 
 		let versesRaw = payload.verses || (Array.isArray(payload) ? payload : [payload]);
 
+		let verses: BibleVerse[] = [];
 		if (Array.isArray(versesRaw)) {
-			return versesRaw.map((v: any, idx: number) => {
+			verses = versesRaw.map((v: any, idx: number) => {
 				if (typeof v === 'string') {
 					return { number: idx + 1, text: v };
 				}
@@ -144,8 +160,15 @@ export async function readChapter(
 			});
 		}
 
-		return [];
+		if (verses.length > 0) {
+			setCachedChapter(bookSlug, chapter, verses, apiTranslation).catch(() => {});
+		}
+		return verses;
 	} catch (error) {
+		const cached = await getCachedChapter(bookSlug, chapter, apiTranslation);
+		if (cached && cached.length > 0) {
+			return cached;
+		}
 		if (error instanceof BibleApiError) throw error;
 		throw new BibleApiError(`Network error reading chapter ${chapter} for ${bookSlug}: ${(error as Error).message}`);
 	}
