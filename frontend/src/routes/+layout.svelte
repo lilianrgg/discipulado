@@ -12,7 +12,8 @@
 <div class="page-shell">
 	<header class="top-bar">
 		<a href="/" class="top-bar__logo">✦ Discipulado</a>
-		<span class="guest-badge">Invitado</span>
+		<a href="/search" class="top-bar__back" style="margin-left:auto;">🔍 Buscar</a>
+		<span class="guest-badge" style="margin-left:var(--sp-2);">Invitado</span>
 	</header>
 
 	<main class="page-content">
