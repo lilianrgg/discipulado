@@ -33,7 +33,7 @@
 	});
 
 	function selectBook(book: BibleBook) {
-		goto(`/${book.slug}/1`);
+		goto(`/${book.slug}`);
 	}
 </script>
 

@@ -110,3 +110,49 @@ export async function setCachedChapter(
 		// Ignore storage errors
 	}
 }
+
+export interface CachedChapterEntry {
+	key: string;
+	translation: string;
+	bookSlug: string;
+	chapter: number;
+	verses: BibleVerse[];
+}
+
+export async function getAllCachedChapters(): Promise<CachedChapterEntry[]> {
+	try {
+		const db = await openDB();
+		if (!db) return [];
+
+		return new Promise((resolve) => {
+			const tx = db.transaction(STORE_CHAPTERS, 'readonly');
+			const store = tx.objectStore(STORE_CHAPTERS);
+			const request = store.openCursor();
+			const entries: CachedChapterEntry[] = [];
+
+			request.onsuccess = (event) => {
+				const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+				if (cursor) {
+					const key = String(cursor.key);
+					const parts = key.split(':');
+					if (parts.length === 3) {
+						entries.push({
+							key,
+							translation: parts[0],
+							bookSlug: parts[1],
+							chapter: parseInt(parts[2], 10),
+							verses: cursor.value as BibleVerse[]
+						});
+					}
+					cursor.continue();
+				} else {
+					resolve(entries);
+				}
+			};
+
+			request.onerror = () => resolve([]);
+		});
+	} catch {
+		return [];
+	}
+}

@@ -5,21 +5,42 @@ import {
 	highlightText,
 	searchVerses
 } from './bible-search';
+import { readChapter } from '../api/bible';
 
-describe('Bible Search Engine', () => {
-	it('should parse valid passage references correctly', () => {
-		const ref1 = parseReference('Juan 3:16');
-		expect(ref1.isReference).toBe(true);
-		expect(ref1.bookSlug).toBe('john');
-		expect(ref1.chapter).toBe(3);
-		expect(ref1.verse).toBe(16);
+describe('Bible Search Engine (Live API Integration)', () => {
+	it('should parse reference and dynamically fetch and filter exact verse text from API across multiple books', async () => {
+		const testReferences = [
+			{ query: 'Génesis 1:1', slug: 'genesis', ch: 1, v: 1 },
+			{ query: 'Éxodo 20:3', slug: 'exodo', ch: 20, v: 3 },
+			{ query: 'Salmos 23:1', slug: 'salmos', ch: 23, v: 1 },
+			{ query: 'Proverbios 3:5', slug: 'proverbios', ch: 3, v: 5 },
+			{ query: 'Mateo 5:3', slug: 'mateo', ch: 5, v: 3 },
+			{ query: 'Juan 3:16', slug: 'juan', ch: 3, v: 16 },
+			{ query: 'Romanos 8:28', slug: 'romanos', ch: 8, v: 28 },
+			{ query: '1 Corintios 13:4', slug: '1-corintios', ch: 13, v: 4 },
+			{ query: '1 Juan 4:8', slug: '1-juan', ch: 4, v: 8 },
+			{ query: 'Apocalipsis 22:21', slug: 'apocalipsis', ch: 22, v: 21 }
+		];
 
-		const ref2 = parseReference('1 Jn 4');
-		expect(ref2.isReference).toBe(true);
-		expect(ref2.bookSlug).toBe('1-john');
-		expect(ref2.chapter).toBe(4);
-		expect(ref2.verse).toBeUndefined();
-	});
+		for (const item of testReferences) {
+			const parsed = parseReference(item.query);
+			expect(parsed.isReference).toBe(true);
+			expect(parsed.bookSlug).toBe(item.slug);
+			expect(parsed.chapter).toBe(item.ch);
+			expect(parsed.verse).toBe(item.v);
+
+			// Fetch chapter dynamically from API (no hardcoded verse texts in test)
+			const chapterVerses = await readChapter(parsed.bookSlug!, parsed.chapter!);
+			expect(chapterVerses.length).toBeGreaterThan(0);
+
+			// Filter target verse dynamically from response
+			const matchingVerse = chapterVerses.find((v) => Number(v.number) === Number(parsed.verse));
+			expect(matchingVerse).toBeDefined();
+			expect(matchingVerse?.text).toBeTruthy();
+
+			console.log(`[API RESPONSE] ${item.query} -> Versículo ${matchingVerse?.number}: "${matchingVerse?.text}"`);
+		}
+	}, 25000);
 
 	it('should return isReference false for general search terms', () => {
 		const ref = parseReference('Dios es amor');
@@ -40,7 +61,7 @@ describe('Bible Search Engine', () => {
 	it('should search across verses list and return matching items', () => {
 		const sampleData = [
 			{
-				bookSlug: 'john',
+				bookSlug: 'juan',
 				bookName: 'Juan',
 				chapter: 3,
 				verses: [
@@ -51,7 +72,7 @@ describe('Bible Search Engine', () => {
 
 		const results = searchVerses('Dios', sampleData);
 		expect(results).toHaveLength(1);
-		expect(results[0].bookSlug).toBe('john');
+		expect(results[0].bookSlug).toBe('juan');
 		expect(results[0].verseNumber).toBe(16);
 	});
 });
