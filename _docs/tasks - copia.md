@@ -32,11 +32,6 @@ Description: Develop a lightweight client-side search index built from cached Bi
 Goal: Enable user registration, login, session persistence, and profile configuration via Supabase Auth.
 Description: Build sign-up, sign-in, and password reset flows using Supabase Auth email/password credentials. Support guest-to-registered user account upgrade while preserving reading history.
 
-## 7.5 Integración de shadcn-svelte y Rediseño Visual
-- [ ] Ejecutar la inicialización de `shadcn-svelte` y verificar la configuración de Tailwind en el frontend.
-- [ ] Instalar componentes clave mediante la CLI (`button`, `card`, `dialog`, `dropdown-menu`).
-- [ ] Refactorizar las pantallas existentes (Tareas 1 a 6) para reemplazar los elementos básicos por los componentes profesionales de shadcn-svelte adaptados a Svelte 5.
-
 ## 8. Reading Plan Engine and Progress Tracker
 Goal: Implement structured daily Bible reading plans with completion tracking.
 Description: Create database schemas and endpoints for managing reading plans, daily chapter assignments, and user progress. Build SvelteKit UI components for joining plans, marking daily readings complete, and viewing progress streaks.
