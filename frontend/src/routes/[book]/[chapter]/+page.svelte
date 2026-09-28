@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { readChapter, getBooks } from '$lib/api/bible';
 	import type { BibleVerse, BibleBook } from '$lib/api/bible';
+	import { Button } from "$lib/components/ui/button/index.js";
 
 	let { data } = $props();
 
@@ -56,13 +57,14 @@
 <nav class="top-bar__breadcrumb" aria-label="Ubicación actual" style="margin-bottom: var(--sp-4);">
 	<a href="/" aria-label="Ir a lista de libros">Inicio</a>
 	<span aria-hidden="true">›</span>
-	<button
+	<Button
+		variant="link"
+		class="h-auto p-0 text-inherit font-inherit no-underline hover:no-underline"
 		onclick={goToChapterList}
-		style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;padding:0;"
 		aria-label="Ver todos los capítulos de {bookLabel}"
 	>
 		{bookLabel}
-	</button>
+	</Button>
 	<span aria-hidden="true">›</span>
 	<span>Cap. {data.chapter}</span>
 </nav>
@@ -92,7 +94,8 @@
 	</ol>
 
 	<nav class="chapter-nav" aria-label="Navegación entre capítulos">
-		<button
+		<Button
+			variant="outline"
 			class="chapter-nav__btn"
 			id="chapter-prev"
 			onclick={goToPrev}
@@ -100,18 +103,19 @@
 			aria-label="Capítulo anterior"
 		>
 			← Anterior
-		</button>
+		</Button>
 
-		<button
-			class="chapter-btn"
+		<Button
+			variant="outline"
+			class="chapter-btn aspect-auto py-2 px-4 text-xs"
 			onclick={goToChapterList}
 			aria-label="Ver todos los capítulos"
-			style="aspect-ratio:unset;padding:var(--sp-2) var(--sp-4);font-size:0.78rem;"
 		>
 			Capítulos
-		</button>
+		</Button>
 
-		<button
+		<Button
+			variant="outline"
 			class="chapter-nav__btn"
 			id="chapter-next"
 			onclick={goToNext}
@@ -119,6 +123,6 @@
 			aria-label="Capítulo siguiente"
 		>
 			Siguiente →
-		</button>
+		</Button>
 	</nav>
 {/if}

@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { getBooks } from '$lib/api/bible';
 	import type { BibleBook } from '$lib/api/bible';
+	import { Button } from "$lib/components/ui/button/index.js";
 
 	let { data } = $props();
 
@@ -57,14 +58,15 @@
 	<div class="chapter-grid" role="list" aria-label="Capítulos de {bookLabel}">
 		{#each { length: bookMeta.chapters } as _, i}
 			{@const ch = i + 1}
-			<button
-				class="chapter-btn"
+			<Button
+				variant="outline"
+				class="chapter-btn aspect-square text-lg font-medium"
 				id="chapter-{ch}"
 				onclick={() => selectChapter(ch)}
 				aria-label="Ir al capítulo {ch}"
 			>
 				{ch}
-			</button>
+			</Button>
 		{/each}
 	</div>
 {/if}

@@ -3,6 +3,8 @@
 	import { parseReference, searchVerses, type SearchResultItem } from '$lib/search/bible-search';
 	import { getAllCachedChapters } from '$lib/db/offline-bible';
 	import { readChapter, getBooks, type BibleBook } from '$lib/api/bible';
+	import { Input } from "$lib/components/ui/input/index.js";
+	import { Button } from "$lib/components/ui/button/index.js";
 
 	let query = $state('');
 	let searching = $state(false);
@@ -174,7 +176,7 @@
 			<circle cx="11" cy="11" r="8" />
 			<line x1="21" y1="21" x2="16.65" y2="16.65" />
 		</svg>
-		<input
+		<Input
 			id="search-input"
 			type="search"
 			placeholder="Ej: Juan 3:16 o 'amor', 'luz', 'gracia'..."
@@ -183,14 +185,13 @@
 			aria-label="Buscar pasaje o palabra clave"
 		/>
 	</div>
-	<button
+	<Button
 		type="button"
-		class="chapter-nav__btn"
 		onclick={performSearch}
-		style="padding:var(--sp-2) var(--sp-5);background:var(--clr-accent);color:#fff;border:none;cursor:pointer;border-radius:var(--r-full);font-weight:600;"
+		class="rounded-full font-semibold px-5 bg-[var(--clr-accent)] hover:bg-[var(--clr-accent-dim)] text-white"
 	>
 		Buscar
-	</button>
+	</Button>
 </div>
 
 {#if searching}

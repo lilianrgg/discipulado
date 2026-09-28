@@ -3,7 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { getBooks } from '$lib/api/bible';
 	import type { BibleBook } from '$lib/api/bible';
-
+	import { Input } from "$lib/components/ui/input/index.js";
+	import { Button } from "$lib/components/ui/button/index.js";
 	let books = $state<BibleBook[]>([]);
 	let loading = $state(true);
 	let error = $state('');
@@ -70,7 +71,7 @@
 			<circle cx="11" cy="11" r="8" />
 			<line x1="21" y1="21" x2="16.65" y2="16.65" />
 		</svg>
-		<input
+		<Input
 			id="book-search"
 			type="search"
 			placeholder="Buscar libro…"
@@ -83,15 +84,16 @@
 		<p class="section-subtitle">Antiguo Testamento</p>
 		<div class="book-grid" role="list">
 			{#each otBooks as book (book.slug)}
-				<button
-					class="book-card"
+				<Button
+					variant="outline"
+					class="book-card h-auto py-4 flex flex-col items-start gap-1 justify-center"
 					id="book-{book.slug}"
 					onclick={() => selectBook(book)}
 					aria-label="{book.names[0]}, {book.chapters} capítulos"
 				>
-					<span class="book-card__name">{book.names[0]}</span>
-					<span class="book-card__chapters">{book.chapters} caps.</span>
-				</button>
+					<span class="book-card__name font-semibold text-base">{book.names[0]}</span>
+					<span class="book-card__chapters text-sm text-muted-foreground">{book.chapters} caps.</span>
+				</Button>
 			{/each}
 		</div>
 	{/if}
@@ -101,15 +103,16 @@
 		<p class="section-subtitle">Nuevo Testamento</p>
 		<div class="book-grid" role="list">
 			{#each ntBooks as book (book.slug)}
-				<button
-					class="book-card"
+				<Button
+					variant="outline"
+					class="book-card h-auto py-4 flex flex-col items-start gap-1 justify-center"
 					id="book-{book.slug}"
 					onclick={() => selectBook(book)}
 					aria-label="{book.names[0]}, {book.chapters} capítulos"
 				>
-					<span class="book-card__name">{book.names[0]}</span>
-					<span class="book-card__chapters">{book.chapters} caps.</span>
-				</button>
+					<span class="book-card__name font-semibold text-base">{book.names[0]}</span>
+					<span class="book-card__chapters text-sm text-muted-foreground">{book.chapters} caps.</span>
+				</Button>
 			{/each}
 		</div>
 	{/if}
