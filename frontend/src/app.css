@@ -1,7 +1,8 @@
 @import "tw-animate-css";
 @import "shadcn-svelte/tailwind.css";
 @import "@fontsource-variable/inter";
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap");
+
 
 /* =========================================================
    Design System — Discipleship Reader
@@ -10,34 +11,47 @@
 
 /* ----- Design Tokens ----- */
 :root {
-	/* Colours — warm editorial palette */
-	--clr-bg: #53beda;
-	/* warm off-white canvas */
-	--clr-surface: #FFFFFF;
-	/* pure white cards */
-	--clr-surface-2: #F2F2EF;
-	/* very subtle hover */
-	--clr-border: #E4E4DF;
-	/* barely-there dividers */
-	--clr-border-strong: #C8C8C0;
-	/* visible but refined */
-	--clr-accent: #1E3A5F;
-	/* deep ink blue — editorial */
-	--clr-accent-dim: #2D5A8E;
-	/* lighter hover state */
-	--clr-accent-tint: #EEF3F9;
-	/* very light blue wash */
-	--clr-gold: #A07520;
-	/* warm muted gold */
-	--clr-text: #005b96;
-	/* near-black ink */
-	--clr-text-muted: #0a0b0e;
-	/* warm mid-gray */
-	--clr-text-subtle: #071120;
-	/* placeholder/secondary */
-	--clr-text-inv: #FFFFFF;
-	--clr-error: #DC2626;
-	--clr-error-tint: #FEF2F2;
+	/* Colours — Biblia Moderna */
+	--clr-bg: #f0fdfa;
+	/* fondo principal */
+
+	--clr-surface: #ffffff;
+	/* tarjetas */
+
+	--clr-surface-2: #ecfeff;
+	/* superficies secundarias */
+
+	--clr-border: #cbd5e1;
+	/* bordes */
+
+	--clr-border-strong: #94a3b8;
+	/* bordes destacados */
+
+	--clr-accent: #0f766e;
+	/* verde azulado principal */
+
+	--clr-accent-dim: #115e59;
+	/* hover */
+
+	--clr-accent-tint: #ccfbf1;
+	/* resaltados */
+
+	--clr-gold: #f59e0b;
+	/* destacados */
+
+	--clr-text: #0f172a;
+	/* texto principal */
+
+	--clr-text-muted: #475569;
+	/* texto secundario */
+
+	--clr-text-subtle: #64748b;
+	/* texto tenue */
+
+	--clr-text-inv: #ffffff;
+
+	--clr-error: #dc2626;
+	--clr-error-tint: #fef2f2;
 
 	/* Typography */
 	--font-ui: 'DM Sans', 'Inter Variable', system-ui, sans-serif;
